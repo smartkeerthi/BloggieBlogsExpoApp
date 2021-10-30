@@ -1,32 +1,40 @@
 {
   "expo": {
-    "name": "bloggieBlog",
+    "name": "Bloggie Blog",
     "slug": "bloggieBlog",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "icon": "./assets/logoBlue.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Bloggie Blog to access your photos"
+        }
+      ]
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bloggieblogs",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logoBlue.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.bloggieblogs",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/logoBlue.png"
+    },
+    "description": "This is a blog app. Created by Keerthivasan.K"
   }
 }
