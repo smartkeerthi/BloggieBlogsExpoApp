@@ -22,7 +22,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bloggieblogs",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,11 +31,20 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.bloggieblogs",
-      "googleServicesFile": "./google-services.json"
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/logoBlue.png"
     },
-    "description": "This is a blog app. Created by Keerthivasan.K"
+    "description": "This is a blog app. Created by Keerthivasan.K",
+    "extra": {
+      "eas": {
+        "projectId": "52fdc9a7-c0cb-481f-99a7-70e15c148e98"
+      }
+    }
   }
 }

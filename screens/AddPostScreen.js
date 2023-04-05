@@ -3,11 +3,11 @@ import { Button, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 
 import axios from '../Axios/axios';
 import Toast from 'react-native-tiny-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
 
-const AddPostScreen = ({navigation}) => {
+const AddPostScreen = ({ navigation }) => {
 
     const [title, setTitle] = useState('');
     const [imageUrl, setImageUrl] = useState('');
@@ -30,31 +30,31 @@ const AddPostScreen = ({navigation}) => {
         firebase.initializeApp(firebaseConfig);
     }
 
-    const handleChooseImg = async() => {
+    const handleChooseImg = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
-    
+
         if (!result.cancelled) {
             setImageUrl(result.uri);
             setIsLocal(true);
-        }else{
+        } else {
             setIsLocal(false);
         }
     }
 
-    const uploadToFirebase = async(uri, imagesName) => {
+    const uploadToFirebase = async (uri, imagesName) => {
         const blob = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.onload = function () {
-              resolve(xhr.response);
+                resolve(xhr.response);
             };
             xhr.onerror = function (e) {
-              console.log(e);
-              reject(new TypeError("Network request failed"));
+                console.log(e);
+                reject(new TypeError("Network request failed"));
             };
             xhr.responseType = "blob";
             xhr.open("GET", uri, true);
@@ -63,41 +63,41 @@ const AddPostScreen = ({navigation}) => {
         // const response = await fetch(uri);
         // const blob = await response.blob();
         const fileName = imagesName + (new Date().toISOString())
-        const ref = firebase.storage().ref().child(`blogImages/${imagesName}/`+ fileName);
+        const ref = firebase.storage().ref().child(`blogImages/${imagesName}/` + fileName);
         const snapshot = await ref.put(blob);
 
         blob.close();
-        
+
         return await snapshot.ref.getDownloadURL();
     }
 
-    const handleSubmit = async() => {
-        if(title != '' && imageUrl != '' && author != '' && desc != '' && content != ''){
+    const handleSubmit = async () => {
+        if (title != '' && imageUrl != '' && author != '' && desc != '' && content != '') {
             const toast = Toast.showLoading('Uploading...');
-            if(isLocal){
+            if (isLocal) {
                 const uploadedUrl = await uploadToFirebase(imageUrl, author);
                 // setImageUrl('');
                 // setImageUrl(uploadedUrl);
-                axios.post('/blogs',{
+                axios.post('/blogs', {
                     "title": title,
                     "image": uploadedUrl,
                     "description": desc,
                     "content": content,
                     "author": author
                 }).then((res) => {
-                        Toast.hide(toast);
-                        setTitle('');
-                        setImageUrl('');
-                        setDesc('');
-                        setContent('');
-                        Toast.showSuccess('Successfully Uploaded');
-                        Toast.show('Pull to refresh',{position: Toast.position.BOTTOM});
-                        navigation.goBack();
-                    }).catch(err => {
-                        console.log(err);
-                        Toast.hide(toast);
-                        Toast.show(`Failed: ${err.message}`,{position: Toast.position.CENTER});
-                    })
+                    Toast.hide(toast);
+                    setTitle('');
+                    setImageUrl('');
+                    setDesc('');
+                    setContent('');
+                    Toast.showSuccess('Successfully Uploaded');
+                    Toast.show('Pull to refresh', { position: Toast.position.BOTTOM });
+                    navigation.goBack();
+                }).catch(err => {
+                    console.log(err);
+                    Toast.hide(toast);
+                    Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                })
             }
             // axios.post('/blogs',{
             //     "title": title,
@@ -119,29 +119,29 @@ const AddPostScreen = ({navigation}) => {
             //         Toast.hide(toast);
             //         Toast.show(`Failed: ${err.message}`,{position: Toast.position.CENTER});
             //     })
-        }else{
-            Toast.show('Fill all the details', {position: Toast.position.CENTER});
+        } else {
+            Toast.show('Fill all the details', { position: Toast.position.CENTER });
         }
     }
 
     useEffect(() => {
-        const getName = async() => {
+        const getName = async () => {
             const value = await AsyncStorage.getItem('userName');
             setAuthor(value);
         }
         (async () => {
             if (Platform.OS !== 'web') {
-              const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-              if (status !== 'granted') {
-                alert('Sorry, we need camera roll permissions to choose images!');
-              }
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to choose images!');
+                }
             }
         })();
         getName();
-    },[author])
+    }, [author])
 
     return (
-        <ScrollView style={{flex: 1, marginBottom: 20}} contentContainerStyle={{alignItems: 'center'}}>
+        <ScrollView style={{ flex: 1, marginBottom: 20 }} contentContainerStyle={{ alignItems: 'center' }}>
             <View style={styles.formControl}>
                 <Text style={styles.formTitle} >Title :</Text>
                 <TextInput
@@ -162,7 +162,7 @@ const AddPostScreen = ({navigation}) => {
                     multiline={true}
                 />
                 <TouchableOpacity activeOpacity={0.5} onPress={handleChooseImg}>
-                    <Text style={{color: "#008eb1"}}>Choose Image</Text>
+                    <Text style={{ color: "#008eb1" }}>Choose Image</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.formControl}>
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
         width: '95%',
         marginTop: 15
     },
-    formTitle:{
+    formTitle: {
         fontSize: 15,
         fontWeight: 'bold',
         letterSpacing: 1,
