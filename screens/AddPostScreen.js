@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import axios from '../Axios/axios';
-import Toast from 'react-native-tiny-toast';
+import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as firebase from 'firebase';
+import { initializeApp } from 'firebase/app';
 
 const AddPostScreen = ({ navigation }) => {
 
@@ -26,9 +26,10 @@ const AddPostScreen = ({ navigation }) => {
         measurementId: "G-8DD85P5K9B"
     };
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+    // if (!firebase.apps.length) {
+    //     firebase.initializeApp(firebaseConfig);
+    // }
+    const firebase = initializeApp(firebaseConfig)
 
     const handleChooseImg = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,7 +74,11 @@ const AddPostScreen = ({ navigation }) => {
 
     const handleSubmit = async () => {
         if (title != '' && imageUrl != '' && author != '' && desc != '' && content != '') {
-            const toast = Toast.showLoading('Uploading...');
+            // const toast = Toast.showLoading('Uploading...');
+            const toast = Toast.show({
+                type: 'info',
+                text1: 'Uploading...'
+            })
             if (isLocal) {
                 const uploadedUrl = await uploadToFirebase(imageUrl, author);
                 // setImageUrl('');
@@ -90,13 +95,27 @@ const AddPostScreen = ({ navigation }) => {
                     setImageUrl('');
                     setDesc('');
                     setContent('');
-                    Toast.showSuccess('Successfully Uploaded');
-                    Toast.show('Pull to refresh', { position: Toast.position.BOTTOM });
+                    // Toast.showSuccess('Successfully Uploaded');
+                    // Toast.show('Pull to refresh', { position: Toast.position.BOTTOM });
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Successfully Uploaded'
+                    })
+                    Toast.show({
+                        type: 'info',
+                        text1: 'Pull to refresh',
+                        position: 'bottom',
+                    })
                     navigation.goBack();
                 }).catch(err => {
                     console.log(err);
                     Toast.hide(toast);
-                    Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    // Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    Toast.show({
+                        type: 'error',
+                        text1: `Failed: ${err.message}`,
+                        position: 'top'
+                    })
                 })
             }
             // axios.post('/blogs',{
@@ -120,7 +139,12 @@ const AddPostScreen = ({ navigation }) => {
             //         Toast.show(`Failed: ${err.message}`,{position: Toast.position.CENTER});
             //     })
         } else {
-            Toast.show('Fill all the details', { position: Toast.position.CENTER });
+            // Toast.show('Fill all the details', { position: Toast.position.CENTER });
+            Toast.show({
+                type: 'info',
+                text1: 'Fill all the details',
+                position: 'top'
+            })
         }
     }
 

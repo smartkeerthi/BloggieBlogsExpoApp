@@ -4,7 +4,7 @@ import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Drawer } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-tiny-toast';
+import Toast from 'react-native-toast-message';
 
 const DrawerContent = (props) => {
 
@@ -70,13 +70,21 @@ const DrawerContent = (props) => {
                             labelStyle = {{fontSize: 15, fontWeight: 'bold', letterSpacing: 1}}
                             label = "Logout"
                             onPress = {async() => {
-                                const toast = Toast.showLoading('Logging Out...')
+                                // const toast = Toast.showLoading('Logging Out...')
+                                const toast = Toast.show({
+                                    type: 'info',
+                                    text1: 'Logging Out...'
+                                })
                                 await AsyncStorage.setItem('token', '');
                                 await AsyncStorage.setItem('userName', '');
                                 await AsyncStorage.setItem('email', '');
                                 await AsyncStorage.setItem('LogedIn', 'false');
                                 Toast.hide(toast);
-                                Toast.showSuccess('Loged Out Successfully', {delay: 500});
+                                // Toast.showSuccess('Loged Out Successfully', {delay: 500});
+                                Toast.show({
+                                    type: 'success',
+                                    text1: 'Loged Out Successfully'
+                                })
                                 checkLoginStatus();
                             }}
                             style = {{borderBottomColor: '#f4f4f4', borderBottomWidth: 1}}

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import axios from '../Axios/axios';
-import Toast from 'react-native-tiny-toast';
-import * as firebase from 'firebase';
+import Toast from 'react-native-toast-message';
+// import * as firebase from 'firebase';
+import { initializeApp } from 'firebase/app';
 import * as ImagePicker from 'expo-image-picker';
 
 const EditPostScreen = ({ navigation, route }) => {
@@ -26,9 +27,10 @@ const EditPostScreen = ({ navigation, route }) => {
         measurementId: "G-8DD85P5K9B"
     };
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+    // if (!firebase.apps.length) {
+    //     firebase.initializeApp(firebaseConfig);
+    // }
+    const firebase = initializeApp(firebaseConfig)
 
 
     const handleChooseImg = async () => {
@@ -74,7 +76,11 @@ const EditPostScreen = ({ navigation, route }) => {
 
     const handleSubmit = async () => {
         if (title != '' && imageUrl != '' && author != '' && desc != '' && content != '') {
-            const toast = Toast.showLoading('Updating...');
+            // const toast = Toast.showLoading('Updating...');
+            const toast = Toast.show({
+                type: 'info',
+                text1: 'Updating...'
+            })
             if (local) {
                 const uploadedUrl = await uploadToFirebase(imageUrl, author);
                 axios.patch(`/blogs/${id}`, {
@@ -89,13 +95,26 @@ const EditPostScreen = ({ navigation, route }) => {
                     setImageUrl('');
                     setDesc('');
                     setContent('');
-                    Toast.showSuccess('Successfully Updated');
-                    Toast.show('Pull to refresh', { position: Toast.position.BOTTOM, delay: 1000 });
+                    // Toast.showSuccess('Successfully Updated');
+                    // Toast.show('Pull to refresh', { position: Toast.position.BOTTOM, delay: 1000 });
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Successfully Updated'
+                    })
+                    Toast.show({
+                        type: 'info',
+                        text1: 'Pull to refresh',
+                        position: 'bottom',
+                    })
                     navigation.goBack();
                 }).catch(err => {
                     console.log(err);
                     Toast.hide(toast);
-                    Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    // Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    Toast.show({
+                        type: 'error',
+                        text1: `Failed: ${err.message}`,
+                    })
                 })
             } else {
                 axios.patch(`/blogs/${id}`, {
@@ -110,17 +129,35 @@ const EditPostScreen = ({ navigation, route }) => {
                     setImageUrl('');
                     setDesc('');
                     setContent('');
-                    Toast.showSuccess('Successfully Updated');
-                    Toast.show('Pull to refresh', { position: Toast.position.BOTTOM, delay: 1000 });
+                    // Toast.showSuccess('Successfully Updated');
+                    // Toast.show('Pull to refresh', { position: Toast.position.BOTTOM, delay: 1000 });
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Successfully Updated'
+                    })
+                    Toast.show({
+                        type: 'info',
+                        text1: 'Pull to refresh',
+                        position: 'bottom',
+                    })
                     navigation.goBack();
                 }).catch(err => {
                     console.log(err);
                     Toast.hide(toast);
-                    Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    // Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    Toast.show({
+                        type: 'error',
+                        text1: `Failed: ${err.message}`,
+                    })
                 })
             }
         } else {
-            Toast.show('Fill all the details', { position: Toast.position.CENTER });
+            // Toast.show('Fill all the details', { position: Toast.position.CENTER });
+            Toast.show({
+                type: 'info',
+                text1: 'Fill all the details',
+                position: 'top'
+            })
         }
     }
 

@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 import { TouchableOpacity } from 'react-native';
-import Toast from 'react-native-tiny-toast';
+import Toast from 'react-native-toast-message';
 import axios from '../Axios/axios';
 
 const LoginScreen = ({ navigation }) => {
@@ -13,7 +13,12 @@ const LoginScreen = ({ navigation }) => {
 
     const handleSubmit = () => {
         if (email != '' && password != '') {
-            const toast = Toast.showLoading('Logging In...');
+            // const toast = Toast.showLoading('Logging In...');
+            const toast = Toast.show({
+                type: 'info',
+                text1: 'Logging In...',
+                position: 'top'
+            })
             axios.post('/auth/login', {
                 "email": email,
                 "password": password
@@ -25,15 +30,29 @@ const LoginScreen = ({ navigation }) => {
                 setEmail('');
                 setPassword('');
                 Toast.hide(toast);
-                Toast.showSuccess('Loged-In Successfully');
+                // Toast.showSuccess('Loged-In Successfully');
+                Toast.show({
+                    type: 'success',
+                    text1: 'Loged-In Successfully'
+                })
                 navigation.goBack();
             }).catch((err) => {
                 console.log(err);
                 Toast.hide(toast);
-                Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                // Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                Toast.show({
+                    type: 'error',
+                    text1: `Failed: ${err.message}`,
+                    position: 'top'
+                })
             })
         } else {
-            Toast.show('Fill all the details', { position: Toast.position.CENTER })
+            // Toast.show('Fill all the details', { position: Toast.position.CENTER })
+            Toast.show({
+                type: 'info',
+                text1: 'Fill all the details',
+                position: 'top'
+            })
         }
     }
 

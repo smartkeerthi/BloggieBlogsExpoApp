@@ -20,6 +20,7 @@ import RegisterScreen from './screens/RegisterScreen';
 
 import en from 'javascript-time-ago/locale/en.json';
 import TimeAgo from 'javascript-time-ago';
+import Toast from 'react-native-toast-message';
 
 
 const Stack = createNativeStackNavigator();
@@ -28,81 +29,84 @@ const DashboardStack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const HomeStackScreen = () => {
-  return(
-    <HomeStack.Navigator screenOptions={{headerShown: false}}>
-      <HomeStack.Screen name="Home" component={HomeScreen}/>
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="BlogPost" component={BlogScreen} />
     </HomeStack.Navigator>
   );
 }
 
 const DashboardStackScreen = () => {
-  return(
-    <DashboardStack.Navigator screenOptions={{headerTitleAlign: 'center', headerStyle:{backgroundColor:'#00c59f'}, headerTintColor: '#fff', headerTitleStyle:{textTransform: 'uppercase'}}}>
-      <DashboardStack.Screen name="Dashboard" component={DashboardScreen}/>
-      <DashboardStack.Screen name="Edit Post" component={EditPostScreen}/>
+  return (
+    <DashboardStack.Navigator useLegacyImplementation={'DEBUG'} screenOptions={{ headerTitleAlign: 'center', headerStyle: { backgroundColor: '#00c59f' }, headerTintColor: '#fff', headerTitleStyle: { textTransform: 'uppercase' } }}>
+      <DashboardStack.Screen name="Dashboard" component={DashboardScreen} />
+      <DashboardStack.Screen name="Edit Post" component={EditPostScreen} />
     </DashboardStack.Navigator>
   )
 }
 
 const DrawerStack = () => {
-  return(
-    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />} screenOptions={{headerTitleAlign: 'center', headerStyle:{backgroundColor:'#00c59f'}, headerTintColor: '#fff', headerTitleStyle:{textTransform: 'uppercase'} }}>
-      <Drawer.Screen name="Bloggie Blog" component={HomeStackScreen} options={{headerStyle:{backgroundColor: '#008eb1'}}} />
+  return (
+    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />} screenOptions={{ headerTitleAlign: 'center', headerStyle: { backgroundColor: '#00c59f' }, headerTintColor: '#fff', headerTitleStyle: { textTransform: 'uppercase' } }}>
+      <Drawer.Screen name="Bloggie Blog" component={HomeStackScreen} options={{ headerStyle: { backgroundColor: '#008eb1' } }} />
       <Drawer.Screen name="Pictures" component={PhotoScreen} />
       <Drawer.Screen name="Add Post" component={AddPostScreen} />
-      <Drawer.Screen name="Dashboard screen" component={DashboardStackScreen} options={{headerShown: false}} />
+      <Drawer.Screen name="Dashboard screen" component={DashboardStackScreen} options={{ headerShown: false }} />
       <Drawer.Screen name="About" component={AboutScreen} />
-      <Drawer.Screen name="Login" component={LoginScreen} options={{headerTransparent: false, headerStyle:{backgroundColor: '#00c59f', elevation: 0}}} />
-      <Drawer.Screen name="Register" component={RegisterScreen} options={{headerTransparent: false, headerStyle:{backgroundColor: '#00c59f', elevation: 0}}} />
+      <Drawer.Screen name="Login" component={LoginScreen} options={{ headerTransparent: false, headerStyle: { backgroundColor: '#00c59f', elevation: 0 } }} />
+      <Drawer.Screen name="Register" component={RegisterScreen} options={{ headerTransparent: false, headerStyle: { backgroundColor: '#00c59f', elevation: 0 } }} />
     </Drawer.Navigator>
   )
 }
 
 
 export default function App() {
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [isOnBoarding, setIsOnBoarding] = useState(true);
 
-  const getValueFromAsync = async() => {
-      try{
-        const value = await AsyncStorage.getItem('initialLaunched');
-        if(value == 'true'){
-          setIsOnBoarding(false);
-        }
-      }catch(err){
-        console.log(err)
+  const getValueFromAsync = async () => {
+    try {
+      const value = await AsyncStorage.getItem('initialLaunched');
+      if (value == 'true') {
+        setIsOnBoarding(false);
       }
+    } catch (err) {
+      console.log(err)
+    }
   };
 
   useEffect(() => {
     TimeAgo.addLocale(en);
     getValueFromAsync();
-    setTimeout(()=>{
+    setTimeout(() => {
       setIsLoading(false);
-    },2000)
-  },[])
+    }, 2000)
+  }, [])
 
-  if(isLoading){
-    return(
-      <SplashScreen/>
+  if (isLoading) {
+    return (
+      <SplashScreen />
     );
   }
 
   return (
-    <NavigationContainer>
+    <>
+      <NavigationContainer>
         {
           isOnBoarding ? (
             <Stack.Navigator>
               <Stack.Screen name="onBoarding" component={OnBoardingScreen} options={{ headerShown: false }} />
-              <Stack.Screen name="HomeDrawer" component={DrawerStack} options={{headerShown: false}} />
+              <Stack.Screen name="HomeDrawer" component={DrawerStack} options={{ headerShown: false }} />
             </Stack.Navigator>
           ) : (
-            <DrawerStack/>
+            <DrawerStack />
           )
         }
-    </NavigationContainer>
+      </NavigationContainer>
+      <Toast />
+    </>
   );
 }
 

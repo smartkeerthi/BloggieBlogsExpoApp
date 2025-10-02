@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import Toast from 'react-native-tiny-toast';
+import Toast from 'react-native-toast-message';
 import axios from '../Axios/axios';
 
 const RegisterScreen = ({ navigation }) => {
@@ -14,7 +14,11 @@ const RegisterScreen = ({ navigation }) => {
 
     const handleSubmit = () => {
         if (name != '' && email != '' && password != '' && confirmPassword != '') {
-            const toast = Toast.showLoading('Registering...');
+            // const toast = Toast.showLoading('Registering...');
+            const toast = Toast.show({
+                type: 'info',
+                text1: 'Registering...'
+            })
             if (password == confirmPassword) {
                 axios.post('/auth/register', {
                     "fullName": name,
@@ -30,19 +34,37 @@ const RegisterScreen = ({ navigation }) => {
                     setPassword('');
                     setConfirmPassword('');
                     Toast.hide(toast);
-                    Toast.showSuccess('Successfully Registered');
+                    // Toast.showSuccess('Successfully Registered');
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Successfully Registered'
+                    })
                     navigation.goBack();
                 }).catch((err) => {
                     console.log(err);
                     Toast.hide(toast);
-                    Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    // Toast.show(`Failed: ${err.message}`, { position: Toast.position.CENTER });
+                    Toast.show({
+                        type: 'error',
+                        text1: `Failed: ${err.message}`,
+                    })
                 })
             } else {
                 Toast.hide(toast);
-                Toast.show('Password and Confirm Password do not match', { position: Toast.position.CENTER })
+                // Toast.show('Password and Confirm Password do not match', { position: Toast.position.CENTER })
+                Toast.show({
+                    type: 'info',
+                    text1: 'Password and Confirm Password do not match',
+                    position: 'top'
+                })
             }
         } else {
-            Toast.show('Fill all the details', { position: Toast.position.CENTER })
+            // Toast.show('Fill all the details', { position: Toast.position.CENTER })
+            const toast = Toast.show({
+                type: 'info',
+                text1: 'Fill all the details',
+                position: 'top'
+            })
         }
     }
 
