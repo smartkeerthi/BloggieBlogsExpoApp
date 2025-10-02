@@ -1,5 +1,48 @@
+// app.config.js
+
 export default {
-    android: {
-        googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? 'google-services.json',
+    expo: {
+        name: "Bloggie Blog",
+        slug: "bloggieBlog",
+        version: "1.0.0",
+        orientation: "portrait",
+        icon: "./assets/logoBlue.png",
+        updates: {
+            fallbackToCacheTimeout: 0,
+        },
+        assetBundlePatterns: ["**/*"],
+        plugins: [
+            [
+                "expo-image-picker",
+                {
+                    photosPermission: "Allow Bloggie Blog to access your photos",
+                },
+            ],
+        ],
+        ios: {
+            supportsTablet: true,
+            bundleIdentifier: "com.bloggieblogs",
+            googleServicesFile: "./GoogleService-Info.plist",
+            buildNumber: "1.0.0",
+        },
+        android: {
+            adaptiveIcon: {
+                foregroundImage: "./assets/logoBlue.png",
+                backgroundColor: "#FFFFFF",
+            },
+            package: "com.bloggieblogs",
+            versionCode: 1,
+            googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
+            permissions: ["android.permission.RECORD_AUDIO"],
+        },
+        web: {
+            favicon: "./assets/logoBlue.png",
+        },
+        description: "This is a blog app. Created by Keerthivasan.K",
+        extra: {
+            eas: {
+                projectId: "52fdc9a7-c0cb-481f-99a7-70e15c148e98",
+            },
+        },
     },
 };
