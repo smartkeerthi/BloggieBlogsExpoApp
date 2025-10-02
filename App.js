@@ -39,7 +39,7 @@ const HomeStackScreen = () => {
 
 const DashboardStackScreen = () => {
   return (
-    <DashboardStack.Navigator useLegacyImplementation={'DEBUG'} screenOptions={{ headerTitleAlign: 'center', headerStyle: { backgroundColor: '#00c59f' }, headerTintColor: '#fff', headerTitleStyle: { textTransform: 'uppercase' } }}>
+    <DashboardStack.Navigator screenOptions={{ headerTitleAlign: 'center', headerStyle: { backgroundColor: '#00c59f' }, headerTintColor: '#fff', headerTitleStyle: { textTransform: 'uppercase' } }}>
       <DashboardStack.Screen name="Dashboard" component={DashboardScreen} />
       <DashboardStack.Screen name="Edit Post" component={EditPostScreen} />
     </DashboardStack.Navigator>
